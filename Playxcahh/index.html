@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rewards Program</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #e5e5e5;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-button {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #1a1a1a;
+            font-size: 20px;
+        }
+
+        .header-icon {
+            width: 32px;
+            height: 32px;
+            background: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .header-info {
+            flex: 1;
+        }
+
+        .header-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .verified-badge {
+            color: #00d4ff;
+            font-size: 14px;
+        }
+
+        .header-subtitle {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-button {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #666;
+            font-size: 18px;
+        }
+
+        /* Main content area */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        /* Bottom input bar */
+        .bottom-bar {
+            background: white;
+            padding: 12px 16px;
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            background: #f5f5f5;
+            border-radius: 24px;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-field {
+            flex: 1;
+            border: none;
+            background: none;
+            outline: none;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            color: #999;
+        }
+
+        .send-button {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ff00d4, #ff66e6);
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .send-button:hover {
+            transform: scale(1.05);
+        }
+
+        .send-button svg {
+            width: 18px;
+            height: 18px;
+            fill: white;
+        }
+
+        .timestamp {
+            text-align: center;
+            color: #999;
+            font-size: 13px;
+            margin-bottom: 30px;
+        }
+
+        .chat-container {
+            max-width: 480px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message {
+            animation: messageSlide 0.4s ease-out;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-bubble {
+            background: white;
+            padding: 18px 20px;
+            border-radius: 18px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            line-height: 1.6;
+            font-size: 15px;
+            color: #1a1a1a;
+            max-width: 90%;
+        }
+
+        .greeting {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        .cta-text {
+            margin-top: 12px;
+            font-weight: 500;
+        }
+
+        .bot-message {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .bot-icon {
+            width: 32px;
+            height: 32px;
+            background: #000;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 4px;
+        }
+
+        .bot-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .question {
+            font-weight: 600;
+            font-size: 15px;
+            color: #1a1a1a;
+        }
+
+        .helper-tip {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            background: #e8f5ff;
+            padding: 14px 16px;
+            border-radius: 12px;
+            margin-top: 16px;
+        }
+
+        .helper-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #00d4ff, #0099ff);
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .helper-text {
+            font-size: 13px;
+            color: #2c5282;
+            line-height: 1.5;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .option-button {
+            background: white;
+            border: 2px solid transparent;
+            background-image: linear-gradient(white, white), 
+                            linear-gradient(135deg, #00d4ff, #ff00d4);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            border-radius: 50px;
+            padding: 16px 24px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a1a1a;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.2);
+        }
+
+        .option-button:active {
+            transform: translateY(0);
+        }
+
+        .option-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .option-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .option-button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Additional messages that appear */
+        .message.delayed-1 {
+            animation-delay: 0.3s;
+            animation-fill-mode: both;
+        }
+
+        .message.delayed-2 {
+            animation-delay: 0.6s;
+            animation-fill-mode: both;
+        }
+
+        .message.delayed-3 {
+            animation-delay: 0.9s;
+            animation-fill-mode: both;
+        }
+
+        /* Loading dots animation */
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .typing-indicator.active {
+            display: flex;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+            padding: 12px 16px;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            background: #ccc;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                background: #ccc;
+            }
+            30% {
+                transform: translateY(-10px);
+                background: #999;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            body {
+                padding: 16px;
+            }
+
+            .message-bubble {
+                font-size: 14px;
+                padding: 16px 18px;
+            }
+
+            .options-grid {
+                gap: 10px;
+            }
+
+            .option-button {
+                padding: 14px 20px;
+                font-size: 14px;
+            }
+        }
+
+        /* Platform selection - stays on same page */
+        .user-bubble {
+            background: #00d4ff;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 18px;
+            display: inline-block;
+            margin-left: auto;
+            font-size: 15px;
+            font-weight: 500;
+            width: fit-content;
+            align-self: flex-end;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: messageSlide 0.4s ease-out forwards;
+        }
+
+        .platform-message {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .platform-message.show {
+            animation: messageSlide 0.4s ease-out forwards;
+        }
+
+        .platforms-wrapper {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .platforms-wrapper.show {
+            animation: messageSlide 0.4s ease-out 0.2s forwards;
+        }
+
+        .platforms-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .platform-card {
+            background: white;
+            border: 2px solid transparent;
+            background-image: linear-gradient(white, white), 
+                            linear-gradient(135deg, #00d4ff, #ff00d4);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            border-radius: 24px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .platform-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 212, 255, 0.15);
+        }
+
+        .platform-card:active {
+            transform: translateY(-1px);
+        }
+
+        .platform-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: linear-gradient(135deg, #00d4ff, #0099ff);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .platform-badge.bonus {
+            background: linear-gradient(135deg, #9945ff, #7b3ff2);
+        }
+
+        .platform-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 6px;
+            padding-right: 120px;
+        }
+
+        .platform-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .platform-methods {
+            font-size: 12px;
+            color: #999;
+            line-height: 1.6;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Success screen */
+        .success-screen {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .success-screen.active {
+            display: block;
+        }
+
+        .success-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            animation: successPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes successPop {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1a1a1a;
+        }
+
+        .success-text {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .continue-button {
+            background: linear-gradient(135deg, #00d4ff, #0099ff);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 16px 40px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(0, 212, 255, 0.3);
+        }
+
+        .continue-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .continue-button:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="back-button">‹</div>
+        <div class="header-icon">
+            <svg fill="white" viewBox="0 0 24 24">
+                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+            </svg>
+        </div>
+        <div class="header-info">
+            <div class="header-title">
+                TikTok Rewards
+                <span class="verified-badge">✓</span>
+            </div>
+            <div class="header-subtitle">Business chat</div>
+        </div>
+        <div class="header-actions">
+            <div class="icon-button">💬</div>
+            <div class="icon-button">⋮</div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+    <div class="timestamp">Today 5:47 PM</div>
+
+    <div class="chat-container" id="chatContainer">
+        <div class="message">
+            <div class="message-bubble">
+                <div class="greeting">Hello 👋</div>
+                <p>We're inviting a small group of TikTok users to join the new TikTok Rewards Program.</p>
+                <p style="margin-top: 12px;">Try new apps & features, share feedback, and earn weekly rewards for your time. Some members earn up to <span class="highlight">$3,500+/week</span> during active cycles.</p>
+                <p class="cta-text">Let's get started!</p>
+            </div>
+        </div>
+
+        <div class="message bot-message delayed-1">
+            <div class="bot-icon">
+                <svg fill="white" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                </svg>
+            </div>
+            <div>
+                <div class="question">How old are you?</div>
+            </div>
+        </div>
+
+        <div class="message delayed-2">
+            <div class="helper-tip">
+                <div class="helper-icon">TIP</div>
+                <div class="helper-text">Select your age range from the options below.</div>
+            </div>
+        </div>
+
+        <div class="message delayed-3">
+            <div class="options-grid">
+                <button class="option-button" onclick="selectOption('18-20')">
+                    <span>18-20</span>
+                </button>
+                <button class="option-button" onclick="selectOption('21-34')">
+                    <span>21-34</span>
+                </button>
+                <button class="option-button" onclick="selectOption('35-44')">
+                    <span>35-44</span>
+                </button>
+                <button class="option-button" onclick="selectOption('45+')">
+                    <span>45+</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="bot-icon">
+                <svg fill="white" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                </svg>
+            </div>
+            <div class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <!-- User's age response -->
+        <div class="user-bubble hidden" id="userResponse"></div>
+
+        <!-- Platform selection message -->
+        <div class="message bot-message platform-message hidden" id="platformMessage">
+            <div class="bot-icon">
+                <svg fill="white" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                </svg>
+            </div>
+            <div>
+                <div class="message-bubble">
+                    <p>Perfect! Based on your preferences, here are the best reward platforms available right now.</p>
+                    <p style="margin-top: 12px;">Which one would you like to get started with?</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Platform cards -->
+        <div class="message platforms-wrapper hidden" id="platformsWrapper">
+            <div class="platforms-container">
+                <div class="platform-card" onclick="selectPlatform('Playful', 'https://www.ch6rrl8trk.com/3KFRZ6/9B9DM/')">
+                    <div class="platform-badge">$3,500+/week</div>
+                    <div class="platform-title">Playful</div>
+                    <div class="platform-description">Play casual games and earn rewards</div>
+                    <div class="platform-methods">Apple Pay, PayPal, Cash App</div>
+                </div>
+
+                <div class="platform-card" onclick="selectPlatform('Apple', 'https://www.ch6rrl8trk.com/3KFRZ6/27P3D6/')">
+                    <div class="platform-badge bonus">One time $1000</div>
+                    <div class="platform-title">Apple</div>
+                    <div class="platform-description">Get gift cards for App Store and iTunes</div>
+                    <div class="platform-methods">Apple Gift Cards • Instant Delivery</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+    </div>
+
+    <!-- Bottom input bar -->
+    <div class="bottom-bar">
+        <div class="input-wrapper">
+            <input type="text" class="input-field" placeholder="Please select from the options above" disabled>
+        </div>
+        <button class="send-button">
+            <svg viewBox="0 0 24 24">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+            </svg>
+        </button>
+    </div>
+
+    <div class="success-screen" id="successScreen">
+        <div class="success-icon">🎉</div>
+        <div class="success-title">You're All Set!</div>
+        <div class="success-text">
+            Great choice! We're preparing your personalized rewards dashboard.<br>
+            Click continue to complete your registration.
+        </div>
+        <button class="continue-button" onclick="continueToOffer()">
+            Continue to Rewards
+        </button>
+    </div>
+
+    <script>
+        function selectOption(age) {
+            // Show typing indicator
+            const typingIndicator = document.getElementById('typingIndicator');
+            typingIndicator.classList.add('active');
+
+            // Disable all buttons
+            const buttons = document.querySelectorAll('.option-button');
+            buttons.forEach(btn => {
+                btn.style.pointerEvents = 'none';
+                btn.style.opacity = '0.6';
+            });
+
+            // After 1.5 seconds, show next messages
+            setTimeout(() => {
+                // Hide typing indicator
+                typingIndicator.classList.remove('active');
+                
+                // Show user's response
+                const userResponse = document.getElementById('userResponse');
+                userResponse.textContent = age;
+                userResponse.classList.remove('hidden');
+                
+                // Show platform message after user response appears
+                setTimeout(() => {
+                    document.getElementById('platformMessage').classList.remove('hidden');
+                    document.getElementById('platformMessage').classList.add('show');
+                    
+                    // Show platform cards after message
+                    setTimeout(() => {
+                        document.getElementById('platformsWrapper').classList.remove('hidden');
+                        document.getElementById('platformsWrapper').classList.add('show');
+                    }, 300);
+                }, 400);
+                
+                // Log selected age
+                console.log('Selected age range:', age);
+            }, 1500);
+        }
+
+        function selectPlatform(platform, url) {
+            // Disable platform cards
+            const cards = document.querySelectorAll('.platform-card');
+            cards.forEach(card => {
+                card.style.pointerEvents = 'none';
+                card.style.opacity = '0.6';
+            });
+
+            // Log selected platform
+            console.log('Selected platform:', platform, 'URL:', url);
+
+            // Redirect to offer after short delay
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
+        }
+
+        function continueToOffer() {
+            // Replace with your actual offer URL
+            console.log('Continuing to offer...');
+            // window.location.href = 'your-offer-url-here';
+            alert('This is where you\'d redirect to your offer page!');
+        }
+
+        // Simulate real-time feel
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.3s ease';
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
