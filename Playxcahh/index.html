@@ -675,6 +675,28 @@
     </div>
 
     <script>
+        // URL Parameter Handling
+        function getURLParameters() {
+            const params = new URLSearchParams(window.location.search);
+            const paramObj = {};
+            for (const [key, value] of params) {
+                paramObj[key] = value;
+            }
+            return paramObj;
+        }
+
+        function buildQueryString(params) {
+            const queryParts = [];
+            for (const [key, value] of Object.entries(params)) {
+                queryParts.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
+            }
+            return queryParts.length > 0 ? '?' + queryParts.join('&') : '';
+        }
+
+        // Get all URL parameters on page load
+        const urlParams = getURLParameters();
+        console.log('URL Parameters:', urlParams);
+
         function selectOption(age) {
             // Show typing indicator
             const typingIndicator = document.getElementById('typingIndicator');
@@ -722,12 +744,26 @@
                 card.style.opacity = '0.6';
             });
 
-            // Log selected platform
-            console.log('Selected platform:', platform, 'URL:', url);
+            // Build final URL with parameters
+            let finalUrl = url;
+            
+            // Check if URL already has parameters
+            const hasParams = url.includes('?');
+            
+            // Add all URL parameters to the affiliate link
+            if (Object.keys(urlParams).length > 0) {
+                const separator = hasParams ? '&' : '?';
+                finalUrl = url + separator + buildQueryString(urlParams).substring(1);
+            }
+
+            // Log selected platform and final URL
+            console.log('Selected platform:', platform);
+            console.log('Original URL:', url);
+            console.log('Final URL with params:', finalUrl);
 
             // Redirect to offer after short delay
             setTimeout(() => {
-                window.location.href = url;
+                window.location.href = finalUrl;
             }, 500);
         }
 
